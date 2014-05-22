@@ -1,0 +1,26 @@
+{
+  "name": "cyclops",
+  "version": "0.0.1",
+  "homepage": "https://github.com/slobak/cyclops",
+  "authors": [
+    "Greg Slovacek <slobak@gmail.com>"
+  ],
+  "description": "Capture user events in the browser and replay them.",
+  "main": "index.js",
+  "moduleType": [
+    "amd",
+    "node"
+  ],
+  "keywords": [
+    "browser",
+    "asana"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
