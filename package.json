@@ -29,6 +29,10 @@
     "gulp-sass": "~0.7.1",
     "gulp-wrap-umd": "~0.2.0",
     "gulp-replace": "~0.3.0",
-    "gulp-wrap": "~0.3.0"
+    "gulp-wrap": "~0.3.0",
+    "gulp-browserify": "~0.5.0"
+  },
+  "dependencies": {
+    "selenium-webdriver": "~2.41.0"
   }
 }
