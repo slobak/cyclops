@@ -25,13 +25,14 @@ launch.launch = function(options) {
       .withCapabilities(caps)
       .build();
 
+  var is_file = options.events_url.indexOf("file:") === 0;
   var promise = driver.getSession().then(function(session) {
     // The `wdsid` and `wdurl` parameters have names that the WebdriverJS
     // library looks for.
     var query_params = {
       wdsid: session.getId(),
       wdurl: options.webdriver_url,
-      cyclops_events_url: options.events_url
+      cyclops_events: is_file ? "js" : options.events_url
     };
     var url = util.appendQuery(options.page_url, query_params);
     console.log("Navigating " + caps.browserName + " to " + url);
@@ -40,7 +41,7 @@ launch.launch = function(options) {
 
   // If the URL is a local file, read it in and upload it to the JS
   // once the page is loaded.
-  if (options.events_url.indexOf("file:") === 0) {
+  if (is_file) {
 
     // Read it in, a newline-separate list of events
     var filename = decodeURIComponent(options.events_url.split("://")[1]);
@@ -56,20 +57,17 @@ launch.launch = function(options) {
 
     // Send a massive request via webdriver to set it in the JS
     // TODO: break up into event chunks so we can support really large lists
-    var deferred = webdriver.promise.defer();
     promise = promise.then(function() {
       console.log("Uploading events to browser");
-      driver.executeAsyncScript(
-              "var callback = arguments[arguments.length - 1];\n" +
-              "callback();\n" +
-              "var cyclops_data = {};\n" +
-              "cyclops_data.events = JSON.parse(arguments[0]);\n" +
-              "window._$cyclops = cyclops_data;\n",
-          JSON.stringify(events),
-          function() {
-            console.log("Finished uploading events to browser");
-            deferred.resolve();
-          });
+      return driver.executeAsyncScript(
+          "var callback = arguments[arguments.length - 1];\n" +
+          "var cyclops_data = {};\n" +
+          "cyclops_data.events = JSON.parse(arguments[0]);\n" +
+          "window._$cyclops = cyclops_data;\n" +
+          "callback();\n",
+          JSON.stringify(events));
+    }).then(function() {
+      console.log("Finished uploading events to browser");
     });
   }
 

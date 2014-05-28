@@ -32,14 +32,14 @@ gulp.task("lint", function() {
 // Concatenate & Minify JS
 gulp.task("js-record", function() {
   return gulp.src("lib/record/index.js")
-      .pipe(browserify({}))
+      .pipe(browserify({ standalone: "CyclopsRecord" }))
       .pipe(rename("cyclops-record.js"))
       .pipe(gulp.dest("dist"));
 });
 
 gulp.task("js-replay", function() {
   return gulp.src("lib/replay/index.js")
-      .pipe(browserify({}))
+      .pipe(browserify({ standalone: "CyclopsReplay" }))
       .pipe(rename("cyclops-replay.js"))
       .pipe(gulp.dest("dist"));
 });
